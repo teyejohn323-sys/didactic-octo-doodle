@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Worth-It Shop — Curated Amazon Picks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --putty: #e7e1d3;
+    --putty-deep: #dcd4c0;
+    --ink: #22271f;
+    --ink-soft: #52584a;
+    --paper: #faf8f2;
+    --mustard: #c89a3c;
+    --clay: #a25a3f;
+    --line: #d8d0ba;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    font-size:16px;
+    line-height:1.55;
+  }
+
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;}
+
+  .wrap{
+    max-width:1120px;
+    margin:0 auto;
+    padding:0 28px;
+  }
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    background:var(--ink);
+    color:var(--paper);
+    font-size:13px;
+    text-align:center;
+    padding:8px 16px;
+  }
+
+  /* ---------- Hero ---------- */
+  header.hero{
+    background:var(--putty);
+    padding:56px 0 32px;
+    border-bottom:1px solid var(--line);
+  }
+
+  .kicker{
+    font-size:14px;
+    color:var(--clay);
+    font-weight:600;
+    margin-bottom:14px;
+  }
+
+  header.hero h1{
+    font-size:clamp(34px, 5vw, 50px);
+    line-height:1.05;
+    max-width:14ch;
+  }
+
+  header.hero p.lede{
+    max-width:56ch;
+    margin-top:16px;
+    font-size:16.5px;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- Page tabs ---------- */
+  .page-tabs{
+    display:flex;
+    gap:6px;
+    margin-top:28px;
+  }
+  .page-tab{
+    font-size:14px;
+    font-weight:600;
+    padding:10px 18px;
+    border:1px solid var(--ink);
+    background:transparent;
+    color:var(--ink);
+    cursor:pointer;
+    border-radius:8px 8px 0 0;
+    border-bottom:none;
+    transform:translateY(1px);
+  }
+  .page-tab.active{
+    background:var(--paper);
+    border-bottom:1px solid var(--paper);
+  }
+  .page-tab:not(.active){
+    background:var(--putty-deep);
+    color:var(--ink-soft);
+  }
+
+  /* ---------- Controls ---------- */
+  .controls{
+    position:sticky;
+    top:0;
+    background:var(--paper);
+    z-index:20;
+    padding:20px 0;
+    border-bottom:1px solid var(--line);
+  }
+
+  .controls-inner{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+  }
+
+  .search-box{
+    position:relative;
+    flex:1;
+    min-width:220px;
+  }
+  .search-box input{
+    width:100%;
+    padding:10px 14px 10px 36px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    font-size:14px;
+    background:#fff;
+  }
+  .search-box svg{
+    position:absolute;
+    left:12px;
+    top:50%;
+    transform:translateY(-50%);
+    color:var(--ink-soft);
+  }
+
+  .chips{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .chip{
+    font-size:13px;
+    font-weight:500;
+    padding:8px 14px;
+    border:1px solid var(--ink);
+    border-radius:999px;
+    background:transparent;
+    color:var(--ink);
+    cursor:pointer;
+    transition:background .15s ease, color .15s ease;
+    white-space:nowrap;
+  }
+  .chip:hover{background:var(--putty-deep);}
+  .chip.active{
+    background:var(--ink);
+    color:var(--paper);
+  }
+
+  /* ---------- Grid ---------- */
+  main{padding:36px 0 80px;}
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));
+    gap:22px;
+  }
+
+  .card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    transition:transform .15s ease, box-shadow .15s ease;
+    position:relative;
+  }
+  .card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(34,39,31,0.08);
+  }
+
+  .card-media{
+    aspect-ratio:1/1;
+    background:var(--putty);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .card-media img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .card-media .placeholder{
+    color:var(--ink-soft);
+    font-family:'Fraunces', serif;
+    font-size:15px;
+    text-align:center;
+    padding:0 20px;
+    opacity:0.55;
+  }
+
+  .cat-tag{
+    position:absolute;
+    top:10px;
+    left:10px;
+    font-size:11px;
+    font-weight:600;
+    background:rgba(255,255,255,0.9);
+    color:var(--clay);
+    padding:3px 9px;
+    border-radius:999px;
+  }
+
+  .mine-tag{
+    position:absolute;
+    top:10px;
+    right:10px;
+    font-size:11px;
+    font-weight:600;
+    background:var(--ink);
+    color:var(--paper);
+    padding:3px 9px;
+    border-radius:999px;
+  }
+
+  .card-body{
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    flex:1;
+  }
+
+  .card-body h3{
+    font-size:16.5px;
+    margin-bottom:6px;
+  }
+
+  .card-body p{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    margin:0 0 14px;
+    flex:1;
+  }
+
+  .card-foot{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+  }
+
+  .price{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:17px;
+  }
+
+  .shop-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    font-size:13px;
+    font-weight:600;
+    background:var(--ink);
+    color:var(--paper);
+    padding:8px 13px;
+    border-radius:6px;
+    transition:background .15s ease;
+  }
+  .shop-btn:hover{background:var(--clay);}
+
+  .remove-btn{
+    font-size:11px;
+    color:var(--clay);
+    text-decoration:underline;
+    cursor:pointer;
+    background:none;
+    border:none;
+    padding:0;
+    margin-top:8px;
+    align-self:flex-start;
+  }
+
+  .empty-state{
+    text-align:center;
+    color:var(--ink-soft);
+    padding:60px 20px;
+    font-size:15px;
+  }
+
+  /* ---------- Add product panel ---------- */
+  .add-panel{
+    max-width:560px;
+    padding:40px 0 80px;
+  }
+  .add-panel h2{
+    font-size:24px;
+    margin-bottom:6px;
+  }
+  .add-panel .sub{
+    font-size:14px;
+    color:var(--ink-soft);
+    margin-bottom:26px;
+  }
+
+  .field{margin-bottom:16px;}
+  .field label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  .field .hint{
+    font-weight:400;
+    color:var(--ink-soft);
+    font-size:12px;
+  }
+  .field input, .field select, .field textarea{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    font-size:14px;
+    font-family:inherit;
+    background:#fff;
+  }
+  .field textarea{resize:vertical;min-height:64px;}
+
+  .submit-btn{
+    background:var(--ink);
+    color:var(--paper);
+    font-size:14px;
+    font-weight:600;
+    padding:11px 20px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    transition:background .15s ease;
+  }
+  .submit-btn:hover{background:var(--clay);}
+
+  .storage-note{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    background:var(--putty);
+    border-left:2px solid var(--mustard);
+    padding:10px 14px;
+    border-radius:0 6px 6px 0;
+    margin-bottom:24px;
+  }
+
+  .mine-list{margin-top:36px;}
+  .mine-list h3{
+    font-size:14px;
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+    color:var(--ink-soft);
+    margin-bottom:12px;
+  }
+  .mine-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:10px 0;
+    border-bottom:1px solid var(--line);
+    font-size:14px;
+  }
+  .mine-row button{
+    background:none;
+    border:none;
+    color:var(--clay);
+    font-size:13px;
+    text-decoration:underline;
+    cursor:pointer;
+  }
+
+  /* ---------- Footer ---------- */
+  footer{
+    background:var(--ink);
+    color:var(--putty);
+    padding:40px 0;
+  }
+  footer .wrap{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  footer p{
+    font-size:13px;
+    color:#c9c4b3;
+    max-width:66ch;
+    margin:0;
+  }
+  footer .brand{
+    font-family:'Fraunces', serif;
+    font-size:18px;
+    color:var(--paper);
+  }
+
+  .hidden{display:none !important;}
+
+  @media (max-width:640px){
+    header.hero{padding:44px 0 24px;}
+    .controls-inner{flex-direction:column;align-items:stretch;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">As an Amazon Associate, this site earns from qualifying purchases.</div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">The Worth-It Shop</div>
+    <h1>Things worth actually buying</h1>
+    <p class="lede">A hand-picked storefront of everyday gear across tech, fitness, kitchen, and home — no filler, no fake urgency. Every pick links straight to the real listing on Amazon.</p>
+    <div class="page-tabs">
+      <button class="page-tab active" data-page="shop">Shop</button>
+      <button class="page-tab" data-page="add">Add a Product</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ SHOP PAGE ============ -->
+<div id="page-shop">
+  <div class="controls">
+    <div class="wrap controls-inner">
+      <div class="search-box">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="search" type="text" placeholder="Search products…">
+      </div>
+      <div class="chips" id="chips"></div>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <div class="grid" id="grid"></div>
+    <div class="empty-state" id="empty" style="display:none;">No products match your search.</div>
+  </main>
+</div>
+
+<!-- ============ ADD PRODUCT PAGE ============ -->
+<div id="page-add" class="hidden">
+  <div class="wrap add-panel">
+    <h2>Add your own product</h2>
+    <p class="sub">Add a product and it'll show up in the Shop tab right away.</p>
+
+    <div class="storage-note" id="storageNote">Saved products stick around on this device/browser between visits.</div>
+
+    <form id="addForm">
+      <div class="field">
+        <label>Product name</label>
+        <input type="text" id="f-name" required placeholder="e.g. Ceramic knife set">
+      </div>
+      <div class="field">
+        <label>Category</label>
+        <select id="f-category"></select>
+        <input type="text" id="f-category-new" class="hidden" placeholder="New category name" style="margin-top:8px;">
+      </div>
+      <div class="field">
+        <label>Price (USD)</label>
+        <input type="text" id="f-price" placeholder="e.g. 24.99">
+      </div>
+      <div class="field">
+        <label>Short description</label>
+        <textarea id="f-description" placeholder="One or two sentences on why it's worth it"></textarea>
+      </div>
+      <div class="field">
+        <label>Amazon affiliate URL</label>
+        <input type="text" id="f-url" required placeholder="https://www.amazon.com/...&tag=yourtag-20">
+      </div>
+      <div class="field">
+        <label>Image URL <span class="hint">(from the Amazon listing — right-click the photo → "Copy image address")</span></label>
+        <input type="text" id="f-image" placeholder="https://m.media-amazon.com/images/...">
+      </div>
+      <button type="submit" class="submit-btn">Add to storefront</button>
+    </form>
+
+    <div class="mine-list" id="mineList"></div>
+
+    <div class="mine-list" id="categoryManager">
+      <h3>Categories</h3>
+      <div id="categoryRows"></div>
+      <div style="display:flex;gap:8px;margin-top:12px;">
+        <input type="text" id="newCatInput" placeholder="Add a new category…" style="flex:1;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-size:13px;">
+        <button type="button" id="addCatBtn" class="submit-btn" style="padding:9px 16px;">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="brand">The Worth-It Shop</div>
+    <p>Disclosure: This page contains affiliate links. As an Amazon Associate, this site earns a commission from qualifying purchases — at no extra cost to you. Prices and availability are set by Amazon and may change at any time.</p>
+  </div>
+</footer>
+
+<script>
+  const BASE_PRODUCTS = [
+    { id: "b1", name: "Fire TV Stick 4K", category: "Tech & Electronics", price: 39.99, description: "Easiest upgrade for an older TV; Alexa remote, fast setup.", url: "https://www.amazon.com/s?k=Fire+TV+Stick+4K&tag=YOURTAG-20", image: "" },
+    { id: "b2", name: "Budget wireless earbuds", category: "Tech & Electronics", price: 29.99, description: "Anker Soundcore tier. Good battery, stays in during workouts.", url: "https://www.amazon.com/s?k=wireless+earbuds&tag=YOURTAG-20", image: "" },
+    { id: "b3", name: "10,000mAh power bank", category: "Tech & Electronics", price: 19.99, description: "Pocket-size, two full phone charges.", url: "https://www.amazon.com/s?k=portable+power+bank+10000mah&tag=YOURTAG-20", image: "" },
+    { id: "b4", name: "Wi-Fi smart plug (2-pack)", category: "Tech & Electronics", price: 14.99, description: "No-hub smart home entry point.", url: "https://www.amazon.com/s?k=wifi+smart+plug+2+pack&tag=YOURTAG-20", image: "" },
+    { id: "b5", name: "Compact Bluetooth speaker", category: "Tech & Electronics", price: 24.99, description: "Room-filling sound, all-afternoon battery.", url: "https://www.amazon.com/s?k=compact+bluetooth+speaker&tag=YOURTAG-20", image: "" },
+    { id: "b6", name: "Wireless lapel mic (2-mic kit)", category: "Tech & Electronics", price: 34.99, description: "Biggest upgrade for phone video quality.", url: "https://www.amazon.com/s?k=wireless+lapel+microphone&tag=YOURTAG-20", image: "" },
+    { id: "b7", name: "Budget robot vacuum", category: "Tech & Electronics", price: 149.99, description: "Turns weekly vacuuming into a monthly job.", url: "https://www.amazon.com/s?k=budget+robot+vacuum&tag=YOURTAG-20", image: "" },
+    { id: "b8", name: "Basic fitness tracker", category: "Health & Fitness", price: 29.99, description: "Steps, sleep, notifications, week-plus battery.", url: "https://www.amazon.com/s?k=fitness+tracker&tag=YOURTAG-20", image: "" },
+    { id: "b9", name: "Resistance bands set", category: "Health & Fitness", price: 16.99, description: "Packs flat, covers most cable-machine moves.", url: "https://www.amazon.com/s?k=resistance+bands+set&tag=YOURTAG-20", image: "" },
+    { id: "b10", name: "Adjustable dumbbells", category: "Health & Fitness", price: 129.99, description: "Dial-adjust versions change weight in seconds.", url: "https://www.amazon.com/s?k=adjustable+dumbbells&tag=YOURTAG-20", image: "" },
+    { id: "b11", name: "Thick eco yoga mat", category: "Health & Fitness", price: 22.99, description: "6mm+ for hard floors, strong grip.", url: "https://www.amazon.com/s?k=thick+eco+friendly+yoga+mat&tag=YOURTAG-20", image: "" },
+    { id: "b12", name: "Budget massage gun", category: "Health & Fitness", price: 44.99, description: "Quiet enough for the couch, real recovery use.", url: "https://www.amazon.com/s?k=budget+massage+gun&tag=YOURTAG-20", image: "" },
+    { id: "b13", name: "Insulated steel tumbler", category: "Home & Kitchen", price: 24.99, description: "Stanley-style. Insulation holds up all day.", url: "https://www.amazon.com/s?k=insulated+steel+tumbler&tag=YOURTAG-20", image: "" },
+    { id: "b14", name: "Compact air fryer (2–4qt)", category: "Home & Kitchen", price: 49.99, description: "Right-sized for one or two people.", url: "https://www.amazon.com/s?k=compact+air+fryer&tag=YOURTAG-20", image: "" },
+    { id: "b15", name: "Single-serve espresso maker", category: "Home & Kitchen", price: 59.99, description: "No full pot needed for one cup.", url: "https://www.amazon.com/s?k=single+serve+espresso+maker&tag=YOURTAG-20", image: "" },
+    { id: "b16", name: "Kitchen gadget bundle", category: "Home & Kitchen", price: 18.99, description: "Garlic press, herb scissors, small real time savers.", url: "https://www.amazon.com/s?k=kitchen+gadget+bundle&tag=YOURTAG-20", image: "" },
+    { id: "b17", name: "Weighted blanket (15–20lb)", category: "Home & Kitchen", price: 54.99, description: "~10% of body weight as a starting point.", url: "https://www.amazon.com/s?k=weighted+blanket&tag=YOURTAG-20", image: "" },
+    { id: "b18", name: "Crocs / comfort clogs", category: "Lifestyle", price: 49.99, description: "Genuinely comfortable for standing all day.", url: "https://www.amazon.com/s?k=comfort+clogs&tag=YOURTAG-20", image: "" },
+    { id: "b19", name: "Interactive pet feeding mat", category: "Lifestyle", price: 15.99, description: "Slows fast eaters, catches mealtime mess.", url: "https://www.amazon.com/s?k=pet+slow+feeder+mat&tag=YOURTAG-20", image: "" },
+    { id: "b20", name: "Monitor stand + cable mgmt", category: "Lifestyle", price: 27.99, description: "Eye-level monitor, tidy desk, cheap fix.", url: "https://www.amazon.com/s?k=monitor+stand+cable+management&tag=YOURTAG-20", image: "" },
+  ];
+
+  const STORAGE_KEY = "storefront-user-products";
+  const CATEGORY_KEY = "storefront-categories";
+  const BASE_CATEGORIES = ["Tech & Electronics", "Health & Fitness", "Home & Kitchen", "Lifestyle"];
+
+  let userProducts = [];
+  let categories = [...BASE_CATEGORIES];
+  let activeCat = 'All';
+  let storageOk = true;
+
+  function uid(){ return 'u' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+
+  function flagStorageIssue(msg){
+    storageOk = false;
+    const note = document.getElementById('storageNote');
+    if (note) note.textContent = msg;
+  }
+
+  async function loadUserProducts(){
+    try {
+      const result = await window.storage.get(STORAGE_KEY, false);
+      userProducts = (result && result.value) ? JSON.parse(result.value) : [];
+    } catch (e) {
+      userProducts = [];
+      flagStorageIssue("Storage isn't available right now — products you add will only last for this session.");
+    }
+    try {
+      const catResult = await window.storage.get(CATEGORY_KEY, false);
+      const saved = (catResult && catResult.value) ? JSON.parse(catResult.value) : [];
+      categories = Array.from(new Set([...BASE_CATEGORIES, ...saved]));
+    } catch (e) {
+      categories = [...BASE_CATEGORIES];
+    }
+    renderChips();
+    renderCategorySelect();
+    renderCategoryManager();
+    render();
+    renderMineList();
+  }
+
+  async function saveUserProducts(){
+    try {
+      await window.storage.set(STORAGE_KEY, JSON.stringify(userProducts), false);
+    } catch (e) {
+      flagStorageIssue("Couldn't save — your added products may not persist after this session.");
+    }
+  }
+
+  async function saveCategories(){
+    try {
+      const custom = categories.filter(c => !BASE_CATEGORIES.includes(c));
+      await window.storage.set(CATEGORY_KEY, JSON.stringify(custom), false);
+    } catch (e) {
+      flagStorageIssue("Couldn't save the new category — it may not persist after this session.");
+    }
+  }
+
+  function addCategory(name){
+    const clean = name.trim();
+    if (!clean || categories.includes(clean)) return false;
+    categories.push(clean);
+    saveCategories();
+    renderChips();
+    renderCategorySelect();
+    renderCategoryManager();
+    return true;
+  }
+
+  function removeCategory(name){
+    if (BASE_CATEGORIES.includes(name)) return; // keep the defaults
+    const inUse = allProducts().some(p => p.category === name);
+    if (inUse && !confirm(`"${name}" is used by existing products. Remove it anyway? Those products will keep the category name but it'll disappear from the filter list.`)) return;
+    categories = categories.filter(c => c !== name);
+    if (activeCat === name) activeCat = 'All';
+    saveCategories();
+    renderChips();
+    renderCategorySelect();
+    renderCategoryManager();
+    render();
+  }
+
+  function renderChips(){
+    const wrap = document.getElementById('chips');
+    wrap.innerHTML = '<button class="chip ' + (activeCat === 'All' ? 'active' : '') + '" data-cat="All">All</button>' +
+      categories.map(c => `<button class="chip ${activeCat === c ? 'active' : ''}" data-cat="${c}">${c}</button>`).join('');
+    wrap.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        activeCat = chip.dataset.cat;
+        renderChips();
+        render();
+      });
+    });
+  }
+
+  function renderCategorySelect(){
+    const select = document.getElementById('f-category');
+    const current = select.value;
+    select.innerHTML = categories.map(c => `<option value="${c}">${c}</option>`).join('') +
+      '<option value="__new__">+ Add new category…</option>';
+    if (categories.includes(current)) select.value = current;
+  }
+
+  function renderCategoryManager(){
+    const wrap = document.getElementById('categoryRows');
+    wrap.innerHTML = categories.map(c => `
+      <div class="mine-row">
+        <span>${c}${BASE_CATEGORIES.includes(c) ? '' : ''}</span>
+        ${BASE_CATEGORIES.includes(c) ? '' : `<button data-cat="${c}">Remove</button>`}
+      </div>
+    `).join('');
+    wrap.querySelectorAll('button[data-cat]').forEach(btn => {
+      btn.addEventListener('click', () => removeCategory(btn.dataset.cat));
+    });
+  }
+
+  function allProducts(){
+    return [...BASE_PRODUCTS, ...userProducts];
+  }
+
+  function render() {
+    const grid = document.getElementById('grid');
+    const empty = document.getElementById('empty');
+    const searchInput = document.getElementById('search');
+    const q = searchInput.value.trim().toLowerCase();
+
+    const items = allProducts().filter(p => {
+      const matchesCat = activeCat === 'All' || p.category === activeCat;
+      const matchesQ = !q || p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q);
+      return matchesCat && matchesQ;
+    });
+
+    grid.innerHTML = '';
+    empty.style.display = items.length ? 'none' : 'block';
+
+    items.forEach(p => {
+      const isMine = p.id && p.id.startsWith('u');
+      const card = document.createElement('div');
+      card.className = 'card';
+      const mediaInner = p.image
+        ? `<img src="${p.image}" alt="${p.name}" onerror="this.parentElement.innerHTML='<div class=\\'placeholder\\'>${p.name}</div>'">`
+        : `<div class="placeholder">${p.name}</div>`;
+      card.innerHTML = `
+        <div class="card-media">
+          <span class="cat-tag">${p.category}</span>
+          ${isMine ? '<span class="mine-tag">Yours</span>' : ''}
+          ${mediaInner}
+        </div>
+        <div class="card-body">
+          <h3>${p.name}</h3>
+          <p>${p.description || ''}</p>
+          <div class="card-foot">
+            <span class="price">${p.price ? '$' + Number(p.price).toFixed(2) : ''}</span>
+            <a class="shop-btn" href="${p.url}" target="_blank" rel="noopener sponsored noreferrer">Shop now →</a>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  function renderMineList(){
+    const wrap = document.getElementById('mineList');
+    if (!userProducts.length) { wrap.innerHTML = ''; return; }
+    wrap.innerHTML = '<h3>Your added products</h3>' + userProducts.map(p => `
+      <div class="mine-row">
+        <span>${p.name}</span>
+        <button data-id="${p.id}">Remove</button>
+      </div>
+    `).join('');
+    wrap.querySelectorAll('button[data-id]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        userProducts = userProducts.filter(p => p.id !== btn.dataset.id);
+        saveUserProducts();
+        render();
+        renderMineList();
+      });
+    });
+  }
+
+  document.getElementById('search').addEventListener('input', render);
+
+  document.getElementById('f-category').addEventListener('change', (e) => {
+    const newInput = document.getElementById('f-category-new');
+    if (e.target.value === '__new__') {
+      newInput.classList.remove('hidden');
+      newInput.focus();
+    } else {
+      newInput.classList.add('hidden');
+    }
+  });
+
+  document.getElementById('addCatBtn').addEventListener('click', () => {
+    const input = document.getElementById('newCatInput');
+    if (addCategory(input.value)) input.value = '';
+  });
+  document.getElementById('newCatInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      document.getElementById('addCatBtn').click();
+    }
+  });
+
+  document.querySelectorAll('.page-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.page-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const page = tab.dataset.page;
+      document.getElementById('page-shop').classList.toggle('hidden', page !== 'shop');
+      document.getElementById('page-add').classList.toggle('hidden', page !== 'add');
+    });
+  });
+
+  document.getElementById('addForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('f-name').value.trim();
+    const url = document.getElementById('f-url').value.trim();
+    if (!name || !url) return;
+
+    let category = document.getElementById('f-category').value;
+    if (category === '__new__') {
+      const newCat = document.getElementById('f-category-new').value.trim();
+      if (!newCat) { document.getElementById('f-category-new').focus(); return; }
+      addCategory(newCat);
+      category = newCat;
+    }
+
+    const product = {
+      id: uid(),
+      name,
+      category,
+      price: parseFloat(document.getElementById('f-price').value) || null,
+      description: document.getElementById('f-description').value.trim(),
+      url,
+      image: document.getElementById('f-image').value.trim(),
+    };
+
+    userProducts.push(product);
+    saveUserProducts();
+    render();
+    renderMineList();
+    document.getElementById('addForm').reset();
+    document.getElementById('f-category-new').classList.add('hidden');
+    renderCategorySelect();
+  });
+
+  loadUserProducts();
+</script>
+
+</body>
+</html>
